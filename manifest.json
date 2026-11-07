@@ -1,0 +1,14 @@
+{
+  "name": "Folha de Ponto — Diárias",
+  "short_name": "Ponto Diárias",
+  "description": "Folha de ponto de diárias com cálculo automático, períodos de pagamento e relatório.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f6b52",
+  "theme_color": "#0f6b52",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "logo-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
