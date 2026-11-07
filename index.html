@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f6b52">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Folha de Ponto — Diárias</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-linha">
+    <div class="marca">
+      <span class="marca-icone" aria-hidden="true">📋</span>
+      <div>
+        <h1>Folha de Ponto</h1>
+        <p>Diárias · pagamento a cada 15 dias</p>
+      </div>
+    </div>
+    <button id="btnTema" class="botao-tema" type="button" aria-label="Alternar tema claro e escuro">
+      <span class="tema-icone">🌙</span><span class="tema-texto">Escuro</span>
+    </button>
+  </div>
+</header>
+
+<main class="conteudo">
+
+  <!-- ===== RESUMO ===== -->
+  <section class="cartao resumo" aria-label="Resumo a receber">
+    <div class="resumo-principal">
+      <span class="rotulo">Total a receber</span>
+      <strong id="totalGeral" class="valor-grande">R$ 0,00</strong>
+      <span id="resumoQtd" class="legenda">nenhum dia registrado</span>
+    </div>
+    <div class="resumo-mini">
+      <div><span class="rotulo">Integrais</span><strong id="resumoIntegral">0</strong></div>
+      <div><span class="rotulo">Meias</span><strong id="resumoMeia">0</strong></div>
+      <div><span class="rotulo">Dias</span><strong id="resumoDias">0</strong></div>
+    </div>
+  </section>
+
+  <!-- ===== TEMA / VALOR VIGENTE ===== -->
+  <section class="cartao" aria-label="Valor vigente">
+    <h2 class="titulo-secao">Valor aplicado ao novo registro</h2>
+    <div class="opcoes-valor" role="radiogroup" aria-label="Valor vigente">
+      <button class="opcao-valor" data-valor="80" role="radio" type="button">
+        <span class="opcao-titulo">Valor antigo</span>
+        <span class="opcao-sub">Integral R$ 80,00 · Meia R$ 40,00</span>
+      </button>
+      <button class="opcao-valor" data-valor="100" role="radio" type="button">
+        <span class="opcao-titulo">Valor reajustado</span>
+        <span class="opcao-sub">Integral R$ 100,00 · Meia R$ 50,00</span>
+      </button>
+    </div>
+    <p class="legenda">O padrão segue a data do registro (antes do reajuste = R$ 80 · a partir do reajuste = R$ 100). Você pode trocar a qualquer momento.</p>
+  </section>
+
+  <!-- ===== NOVO REGISTRO ===== -->
+  <section class="cartao" aria-label="Registrar ponto">
+    <h2 class="titulo-secao" id="tituloForm">Registrar ponto</h2>
+
+    <div class="campo">
+      <label for="campoData">Data</label>
+      <input type="date" id="campoData" class="entrada entrada-data">
+    </div>
+
+    <div class="campo">
+      <span class="label">Tipo de dia</span>
+      <div class="opcoes-tipo" role="radiogroup" aria-label="Tipo de dia">
+        <button class="opcao-tipo" data-tipo="integral" role="radio" type="button">
+          <span class="opcao-titulo">Dia integral</span>
+          <span class="opcao-sub" id="subIntegral">R$ 80,00</span>
+        </button>
+        <button class="opcao-tipo" data-tipo="meia" role="radio" type="button">
+          <span class="opcao-titulo">Meia diária</span>
+          <span class="opcao-sub" id="subMeia">R$ 40,00</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="campoValor">Valor do dia (R$)</label>
+      <div class="linha-valor">
+        <input type="number" id="campoValor" class="entrada" inputmode="decimal" step="0.01" min="0" placeholder="0,00">
+        <button id="btnSugerir" class="botao-secundario" type="button">Usar padrão</button>
+      </div>
+      <p id="avisoValor" class="legenda aviso" hidden></p>
+    </div>
+
+    <div class="acoes-form">
+      <button id="btnSalvar" class="botao botao-principal" type="button">Adicionar registro</button>
+      <button id="btnCancelar" class="botao botao-neutro" type="button" hidden>Cancelar edição</button>
+    </div>
+    <p id="mensagem" class="mensagem" role="status" hidden></p>
+  </section>
+
+  <!-- ===== PERÍODOS ===== -->
+  <section class="cartao" aria-label="Períodos de pagamento">
+    <h2 class="titulo-secao">Períodos de pagamento</h2>
+    <p class="legenda">Ciclos de 15 em 15 dias, começando no dia 5 de cada mês.</p>
+    <div id="listaPeriodos" class="lista-periodos"></div>
+  </section>
+
+  <!-- ===== REGISTROS ===== -->
+  <section class="cartao" aria-label="Registros">
+    <div class="cabecalho-secao">
+      <h2 class="titulo-secao">Registros</h2>
+      <span id="contadorRegistros" class="pilula">0</span>
+    </div>
+
+    <div class="filtro-mes">
+      <button id="btnMesAnterior" class="botao-icone" type="button" aria-label="Mês anterior">◀</button>
+      <select id="filtroMes" class="entrada entrada-select" aria-label="Filtrar por mês"></select>
+      <button id="btnMesProximo" class="botao-icone" type="button" aria-label="Próximo mês">▶</button>
+    </div>
+
+    <div id="listaRegistros" class="lista-registros"></div>
+  </section>
+
+  <!-- ===== RELATÓRIO / CONFIG ===== -->
+  <section class="cartao" aria-label="Relatório e configurações">
+    <h2 class="titulo-secao">Relatório</h2>
+    <div class="grade-botoes">
+      <button id="btnRelatorio" class="botao botao-principal" type="button">📄 Baixar relatório</button>
+      <button id="btnImprimir" class="botao botao-secundario" type="button">🖨️ Salvar em PDF</button>
+      <button id="btnCsv" class="botao botao-secundario" type="button">📊 Baixar planilha (CSV)</button>
+    </div>
+
+    <h2 class="titulo-secao espaco-topo">Configurações</h2>
+    <div class="campo">
+      <label for="campoReajuste">Data do reajuste (R$ 100 / R$ 50)</label>
+      <input type="date" id="campoReajuste" class="entrada entrada-data">
+    </div>
+    <div class="grade-botoes">
+      <button id="btnBackup" class="botao botao-neutro" type="button">⬇️ Exportar backup</button>
+      <button id="btnRestaurar" class="botao botao-neutro" type="button">⬆️ Importar backup</button>
+      <input type="file" id="arquivoBackup" accept="application/json,.json" hidden>
+    </div>
+    <p class="legenda">Os dados ficam salvos neste aparelho (memória do navegador). Faça um backup de vez em quando para não perder nada.</p>
+  </section>
+
+  <footer class="rodape">
+    <span id="statusSalvo" class="status-salvo">tudo salvo</span>
+  </footer>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
